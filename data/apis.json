@@ -1,0 +1,64 @@
+{
+  "apis": [
+    {
+      "id": 1,
+      "name": "天气API",
+      "category": "天气",
+      "description": "提供全球城市的天气预报数据，包括温度、湿度、风速等。",
+      "url": "https://api.example.com/weather",
+      "auth_required": true,
+      "https": true,
+      "cors": true
+    },
+    {
+      "id": 2,
+      "name": "新闻API",
+      "category": "新闻",
+      "description": "获取全球各类新闻的实时数据，支持多种语言和分类。",
+      "url": "https://api.example.com/news",
+      "auth_required": true,
+      "https": true,
+      "cors": true
+    },
+    {
+      "id": 3,
+      "name": "货币汇率API",
+      "category": "金融",
+      "description": "提供实时货币汇率转换，支持全球多种货币。",
+      "url": "https://api.example.com/currency",
+      "auth_required": false,
+      "https": true,
+      "cors": true
+    },
+    {
+      "id": 4,
+      "name": "电影数据API",
+      "category": "娱乐",
+      "description": "获取电影信息，包括演员、导演、评分、上映日期等。",
+      "url": "https://api.example.com/movies",
+      "auth_required": true,
+      "https": true,
+      "cors": false
+    },
+    {
+      "id": 5,
+      "name": "翻译API",
+      "category": "语言",
+      "description": "支持多种语言之间的文本翻译，高精度语义分析。",
+      "url": "https://api.example.com/translate",
+      "auth_required": true,
+      "https": true,
+      "cors": true
+    },
+    {
+      "id": 6,
+      "name": "地图API",
+      "category": "地理",
+      "description": "提供地理编码、路线规划、距离计算等功能。",
+      "url": "https://api.example.com/maps",
+      "auth_required": true,
+      "https": true,
+      "cors": true
+    }
+  ]
+}
