@@ -1,47 +1,24 @@
-// script.js - 从数据文件加载API信息
+// script.js - 从远程API加载数据
+document.addEventListener('DOMContentLoaded', function() {
+    loadApiData();
+    loadGreeting();
+});
 
-document.addEventListener('DOMContentLoaded', async function() {
-    // 获取API卡片容器
+// 加载API数据函数
+async function loadApiData() {
     const apiCardsContainer = document.getElementById('api-cards');
+    apiCardsContainer.innerHTML = '<div class="loading">加载API数据中...</div>';
 
     try {
-        // 从数据文件加载API信息
-        const response = await fetch('/data/apis.json');
-        const data = await response.json();
-
-        // 检查是否成功获取数据
-        if (!data || !data.apis || !Array.isArray(data.apis)) {
-            throw new Error('无法加载API数据');
+        const response = await fetch('https://dataishop.cn/api/apis/');
+        if (!response.ok) {
+            throw new Error('无法获取API数据');
         }
 
-        // 遍历API数据并创建卡片
-        data.apis.forEach(api => {
-            // 创建卡片元素
-            const card = document.createElement('div');
-            card.className = 'api-card';
+        const data = await response.json();
 
-            // 设置卡片内容
-            card.innerHTML = `
-                <h3>${api.name}</h3>
-                <span class="category">${api.category}</span>
-                <p class="description">${api.description}</p>
-                <div class="api-features">
-                    <span class="feature ${api.auth_required ? 'required' : 'optional'}">
-                        认证: ${api.auth_required ? '需要' : '可选'}
-                    </span>
-                    <span class="feature ${api.https ? 'yes' : 'no'}">
-                        HTTPS: ${api.https ? '是' : '否'}
-                    </span>
-                    <span class="feature ${api.cors ? 'yes' : 'no'}">
-                        CORS: ${api.cors ? '支持' : '不支持'}
-                    </span>
-                </div>
-                <a href="${api.url}" class="url" target="_blank">${api.url}</a>
-            `;
-
-            // 将卡片添加到容器
-            apiCardsContainer.appendChild(card);
-        });
+        apiCardsContainer.innerHTML = '';
+        renderApiCards(data.apis, apiCardsContainer);
     } catch (error) {
         console.error('加载API数据时出错:', error);
         apiCardsContainer.innerHTML = `
@@ -50,13 +27,48 @@ document.addEventListener('DOMContentLoaded', async function() {
             </div>
         `;
     }
+}
 
-    // 尝试从greeting API获取问候语
+// 渲染API卡片函数
+function renderApiCards(apis, container) {
+    if (!apis || apis.length === 0) {
+        container.innerHTML = '<p>没有找到API数据</p>';
+        return;
+    }
+
+    apis.forEach(api => {
+        const card = document.createElement('div');
+        card.className = 'api-card';
+
+        card.innerHTML = `
+            <h3>${api.name}</h3>
+            <span class="category">${api.category}</span>
+            <p class="description">${api.description}</p>
+            <div class="api-features">
+                <span class="feature ${api.auth_required ? 'required' : 'optional'}">
+                    认证: ${api.auth_required ? '需要' : '可选'}
+                </span>
+                <span class="feature ${api.https ? 'yes' : 'no'}">
+                    HTTPS: ${api.https ? '是' : '否'}
+                </span>
+                <span class="feature ${api.cors ? 'yes' : 'no'}">
+                    CORS: ${api.cors ? '支持' : '不支持'}
+                </span>
+            </div>
+            <a href="${api.url}" class="url" target="_blank">${api.url}</a>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+// 加载问候语函数
+async function loadGreeting() {
     try {
-        const response = await fetch('/api/greeting');
-        const data = await response.json();
+        const response = await fetch('https://dataishop.cn/api/greeting/');
+        if (!response.ok) return;
 
-        // 如果成功获取问候语，添加到页面
+        const data = await response.json();
         if (data && data.message) {
             const heroSection = document.querySelector('.hero');
             const greetingElement = document.createElement('div');
@@ -66,6 +78,5 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     } catch (error) {
         console.log('无法加载问候语API');
-        // 这里我们不显示错误，因为问候语是锦上添花功能
     }
-});
+}
